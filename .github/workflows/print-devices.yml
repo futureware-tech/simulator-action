@@ -1,0 +1,37 @@
+name: 'print-devices'
+
+on:
+  schedule:
+    - cron: '13 4,16 * * *'
+
+jobs:
+  print:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-10.15
+          # - macos-11.0
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci && npm run build
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: Wiki
+          token: ${{ secrets.FASTLANE_UPDATE_GITHUB_TOKEN }}
+      - run: >
+          grep '${{ matrix.os }}' Home.md ||
+          echo '- [`${{ matrix.os }}`](Devices-${{ matrix.os }})' >>
+          Home.md
+        working-directory: Wiki
+      - run: npm run print_devices -- Wiki/Devices-${{ matrix.os }}.md
+      - run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m 'Update the list of devices'
+            git push
+          fi
+        working-directory: Wiki
