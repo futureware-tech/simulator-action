@@ -1,0 +1,39 @@
+name: 'Launch iOS Simulator'
+description: 'Launch an iOS Simulator (and shut it down once the job completes)'
+branding:
+  icon: smartphone
+  color: dark-gray
+inputs:
+  model:
+    description: "Simulator device model name (e.g. 'iPhone 8' )"
+    required: false
+  os:
+    description: "OS type (supported: 'iOS', 'watchOS' and 'tvOS')"
+    required: false
+  os_version:
+    description: "OS version requirement in semver format (e.g. '^14.4')"
+    required: false
+  udid:
+    description: >
+      Specific UDID of the device to start. If UDID is specified along with OS
+      and/or model, the action fails if the device with this UDID does not match
+      specified constraints
+    required: false
+  erase_before_boot:
+    description: Whether the Simulator data should be erased before booting
+    required: true
+    default: 'true'
+  shutdown_after_job:
+    description: >
+      Whether the Simulator should be shut down after the job has finished. This
+      is mostly relevant when e.g. running on self-hosted actions where the host
+      OS and therefore Simulator will continue running after the job is finished
+    required: true
+    default: 'true'
+outputs:
+  udid:
+    description: 'UDID of the launched device, for use with e.g. xcrun command'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+  post: 'dist/cleanup.js'
