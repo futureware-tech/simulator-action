@@ -19,18 +19,21 @@ jobs:
           repository: futureware-tech/template
           # Has to be under the repository directory, otherwise checkout fails.
           path: tmp/template
-      - run: cp -rf "tmp/template/." .
+      # TODO(dotdoom): copy other directories as well (except ".git").
+      - run: cp -rf tmp/template/.github .
 
       # Copy over repository-specific custom overlay.
       - uses: actions/checkout@v2
         with:
           repository: futureware-tech/overlays
           path: tmp/overlays
+      # TODO(dotdoom): read OVERLAYS line by line and apply each.
       - run: |
+          if [ -r OVERLAY ]; then
+            mv OVERLAY OVERLAYS
+          fi
           if [ -r OVERLAYS ]; then
-            while read -r overlay < OVERLAYS; do
-              cp -rf "tmp/overlays/${overlay}/." .
-            done
+            cp -rf "tmp/overlays/$(<OVERLAYS)/." .
           fi
 
       - run: rm -rf tmp
