@@ -6,6 +6,7 @@ on:
 
 jobs:
   print:
+    concurrency: device_list_wiki_update_max_one_in_flight
     strategy:
       fail-fast: false
       matrix:
