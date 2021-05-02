@@ -20,4 +20,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./
-      - run: xcrun simctl spawn booted log show --last 1
+      - run: xcrun simctl bootstatus booted
