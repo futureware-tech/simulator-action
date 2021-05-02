@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import {boolean} from 'boolean'
 import * as semver from 'semver'
 import {deviceToString, getDevices, simctl} from './xcrun'
 
@@ -72,12 +73,12 @@ async function run(): Promise<void> {
       await simctl('shutdown', device.udid)
     }
 
-    if (core.getInput('erase_before_boot') !== 'false') {
+    if (boolean(core.getInput('erase_before_boot'))) {
       core.info(`Erasing device...`)
       await simctl('erase', device.udid)
     }
 
-    if (core.getInput('shutdown_after_job') !== 'false') {
+    if (boolean(core.getInput('shutdown_after_job'))) {
       core.saveState('udid', device.udid)
     }
     core.info(`Booting device.`)
