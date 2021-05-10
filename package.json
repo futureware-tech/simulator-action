@@ -29,7 +29,7 @@
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@types/semver": "^7.3.5",
-    "boolean": "^3.0.3",
+    "boolean": "^3.0.4",
     "semver": "^7.3.5"
   },
   "devDependencies": {
