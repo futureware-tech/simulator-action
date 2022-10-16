@@ -86,7 +86,11 @@ async function run(): Promise<void> {
 
     core.setOutput('udid', device.udid)
   } catch (error) {
-    core.setFailed(error.message)
+    let errorMessage = 'Failed to run simulator-action (reason unknown)'
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    core.setFailed(errorMessage)
   }
 }
 
@@ -98,7 +102,11 @@ async function cleanup(): Promise<void> {
       await simctl('shutdown', udid)
     }
   } catch (error) {
-    core.setFailed(error.message)
+    let errorMessage = 'Failed to cleanup simulator-action (reason unknown)'
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    core.setFailed(errorMessage)
   }
 }
 
