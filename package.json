@@ -12,7 +12,7 @@
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
-    "print_devices": "node lib/print_devices.js"
+    "print-devices": "node lib/print-devices.js"
   },
   "repository": {
     "type": "git",

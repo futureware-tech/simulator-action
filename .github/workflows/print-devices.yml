@@ -28,7 +28,7 @@ jobs:
           echo '- [`${{ matrix.os }}`](Devices-${{ matrix.os }})' >>
           Home.md
         working-directory: Wiki
-      - run: npm run print_devices -- Wiki/Devices-${{ matrix.os }}.md
+      - run: npm run print-devices -- Wiki/Devices-${{ matrix.os }}.md
       - run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add .
