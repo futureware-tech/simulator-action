@@ -5,15 +5,15 @@ import {deviceToString, getDevices, simctl} from './xcrun'
 
 async function run(): Promise<void> {
   try {
-    let model = core.getInput('model')
-    const os = core.getInput('os')
+    const model = core.getInput('model')
+    let os = core.getInput('os')
     const os_version = core.getInput('os_version')
     const udid = core.getInput('udid')
 
     if (!udid && !os && !os_version && !model) {
       // Give a reasonable default, otherwise we may end up with tvOS, which is
       // unlikely to be a good guess.
-      model = 'iPhone 8'
+      os = 'iOS'
     }
 
     const matchingDevices = (await getDevices()).filter(device => {

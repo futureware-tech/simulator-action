@@ -17,9 +17,9 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
           path: Wiki
