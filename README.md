@@ -32,7 +32,9 @@ For GitHub Actions runners, a fresh list of devices is maintained in the
 project. Note that UDID and OS version can be rather volatile and may change
 when Mac OS updates, so it's recommended to stay with only specifying the model
 or if you really need OS version, leave it on the loose side (e.g.
-`os_version: ">=14.0"`).
+`os_version: ">=14.0"`). The UDIDs on that page also cannot be used to register
+a device with Apple Developer account, because a Simulator UDID
+[can not be used there](https://developer.apple.com/forums/thread/693026).
 
 | Name                 | Sample values            | Description                                                                                                                        |
 | -------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
