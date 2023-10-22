@@ -1,4 +1,4 @@
-## UNRELEASED
+## v3
 
 - Breaking: change the default simulator from "model = iPhone 8" to "os = iOS",
   to avoid re-releasing the action each time the current model gets outdated.
