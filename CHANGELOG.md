@@ -1,3 +1,7 @@
+## UNRELEASED
+
+- Bump NodeJS to 20.
+
 ## v2
 
 - Update a few packages for security reasons.
