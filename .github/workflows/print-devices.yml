@@ -11,7 +11,6 @@ jobs:
       max-parallel: 1
       matrix:
         os:
-          - macos-12
           - macos-13
           - macos-14
           - macos-latest
