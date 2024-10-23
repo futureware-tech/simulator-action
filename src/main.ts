@@ -84,6 +84,11 @@ async function run(): Promise<void> {
     core.info(`Booting device.`)
     await simctl('boot', device.udid)
 
+    if (boolean(core.getInput('wait_for_boot'))) {
+      core.info(`Waiting for device to finish booting.`)
+      await simctl('bootstatus', device.udid)
+    }
+
     core.setOutput('udid', device.udid)
   } catch (error) {
     let errorMessage = 'Failed to run simulator-action (reason unknown)'

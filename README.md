@@ -42,7 +42,8 @@ a device with Apple Developer account, because a Simulator UDID
 | `os`                 | `iOS`, `tvOS`, `watchOS` | OS type of the device                                                                                                              |
 | `os_version`         | `>=14.0`                 | OS version specification in semver format                                                                                          |
 | `udid`               | `ABCD-EFGH`              | Specific UDID you'd like to launch                                                                                                 |
-| `erase_before_boot`  | `true`                   | Whether the data should be erased from device before boot. Starting for a clean state helps getting a stable environment for tests |
+| `erase_before_boot`  | `true`                   | Whether the data should be erased from device before boot. Starting from a clean state helps getting a stable environment for tests |
+| `wait_for_boot`      | `false`                  | Whether the action must wait for the Simulator to finish booting requested image                                                  |
 | `shutdown_after_job` | `true`                   | Whether to shutdown the launched Simulator after the workflow job has been finished                                                |
 
 ## Outputs
