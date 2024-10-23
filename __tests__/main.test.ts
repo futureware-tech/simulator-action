@@ -14,6 +14,11 @@ test('boots a device', () => {
     cp.execFileSync(nodeProcess, [actionMain], options).toString()
   ).toContain('Booting device')
 
+  process.env['INPUT_WAIT_FOR_BOOT'] = 'true'
+  expect(
+    cp.execFileSync(nodeProcess, [actionMain], options).toString()
+  ).toContain('Waiting for device to finish booting')
+
   process.env['INPUT_MODEL'] = 'Pixel 4'
   expect(() => cp.execFileSync(nodeProcess, [actionMain], options)).toThrow()
 })

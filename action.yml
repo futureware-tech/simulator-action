@@ -23,6 +23,12 @@ inputs:
     description: Whether the Simulator data should be erased before booting
     required: true
     default: 'true'
+  wait_for_boot:
+    description: >
+      Whether the action must wait for the Simulator to finish booting requested
+      image
+    required: false
+    default: 'false'
   shutdown_after_job:
     description: >
       Whether the Simulator should be shut down after the job has finished. This

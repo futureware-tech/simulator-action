@@ -1,3 +1,8 @@
+## v4
+
+- Add a `wait_for_boot` option (default false, preserving current behavior) to
+  wait for Simulator to finish booting the requested image before continuing.
+
 ## v3
 
 - Breaking: change the default simulator from "model = iPhone 8" to "os = iOS",
