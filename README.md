@@ -13,7 +13,7 @@ self-hosted runners.
 ```yaml
 steps:
   - uses: actions/checkout@v4
-  - uses: futureware-tech/simulator-action@v3
+  - uses: futureware-tech/simulator-action@v4
     with:
       model: 'iPhone 8'
   - run: flutter drive
