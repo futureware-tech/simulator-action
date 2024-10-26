@@ -44,7 +44,7 @@
     "jest-circus": ">=27.4.6",
     "js-yaml": ">=4.1.0",
     "prettier": ">=3.3.3",
-    "ts-jest": ">=26.5.6",
+    "ts-jest": ">=29.2.5",
     "typescript": ">=5.6.3"
   }
 }
