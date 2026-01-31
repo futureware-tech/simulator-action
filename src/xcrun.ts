@@ -62,17 +62,25 @@ export async function simctl(action: string, udid: string): Promise<void> {
 async function xcrun(tail: string): Promise<string> {
   const command = `xcrun ${tail}`
   core.info(`$ ${command}`)
-  const {stdout, stderr} = await execAsync(command)
-  if (stderr) {
-    core.warning(`Errors or warnings in the output of ${command}`)
-    core.startGroup(`[stderr] ${command}`)
-    core.warning(stderr)
-    core.endGroup()
+
+  let res: {stdout?: string; stderr?: string} | undefined
+  try {
+    res = await execAsync(command)
+    return res.stdout || ''
+  } catch (e) {
+    res = e as {stdout?: string; stderr?: string}
+    throw e
+  } finally {
+    if (res?.stderr) {
+      core.warning(`Errors or warnings in the output of ${command}`)
+      core.startGroup(`[stderr] ${command}`)
+      core.warning(res.stderr)
+      core.endGroup()
+    }
+    if (res?.stdout && core.isDebug()) {
+      core.startGroup(`[stdout] ${command}`)
+      core.debug(res.stdout)
+      core.endGroup()
+    }
   }
-  if (core.isDebug()) {
-    core.startGroup(`[stdout] ${command}`)
-    core.debug(stdout)
-    core.endGroup()
-  }
-  return stdout
 }
