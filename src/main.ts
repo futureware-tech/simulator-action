@@ -85,23 +85,14 @@ async function run(): Promise<void> {
     await simctl('boot', device.udid)
 
     if (boolean(core.getInput('wait_for_boot'))) {
-      const bootTimeoutSeconds = Number(
-        core.getInput('boot_timeout_seconds') || '1200'
-      )
-      const bootRetries = Number(core.getInput('boot_retries') || '1')
-      const normalizedBootTimeoutSeconds = Number.isFinite(bootTimeoutSeconds)
-        ? Math.max(0, bootTimeoutSeconds)
-        : 0
-      const normalizedBootRetries = Number.isFinite(bootRetries)
-        ? Math.max(0, Math.floor(bootRetries))
-        : 0
+      const bootTimeoutSeconds = Number(core.getInput('boot_timeout_seconds'))
+      const bootRetries = Number(core.getInput('boot_retries'))
+
       const bootTimeoutMs =
-        normalizedBootTimeoutSeconds > 0
-          ? normalizedBootTimeoutSeconds * 1000
-          : undefined
+        bootTimeoutSeconds > 0 ? bootRetries * 1000 : undefined
 
       core.info(`Waiting for device to finish booting.`)
-      const maxAttempts = normalizedBootRetries + 1
+      const maxAttempts = bootRetries + 1
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
           await simctl('bootstatus', device.udid, {timeoutMs: bootTimeoutMs})

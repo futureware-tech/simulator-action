@@ -71,9 +71,9 @@ async function xcrun(tail: string, options: ExecOptions = {}): Promise<string> {
   const command = `xcrun ${tail}`
   core.info(`$ ${command}`)
   const execOptions =
-    typeof options.timeoutMs === 'number'
-      ? {timeout: options.timeoutMs, encoding: 'utf8'}
-      : {encoding: 'utf8'}
+    options.timeoutMs === undefined
+      ? {encoding: 'utf8'}
+      : {timeout: options.timeoutMs, encoding: 'utf8'}
   const {stdout, stderr} = await execAsync(command, execOptions)
   if (stderr) {
     core.warning(`Errors or warnings in the output of ${command}`)
