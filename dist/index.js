@@ -118,19 +118,11 @@ function run() {
             core.info(`Booting device.`);
             yield (0, xcrun_1.simctl)('boot', device.udid);
             if ((0, boolean_1.boolean)(core.getInput('wait_for_boot'))) {
-                const bootTimeoutSeconds = Number(core.getInput('boot_timeout_seconds') || '1200');
-                const bootRetries = Number(core.getInput('boot_retries') || '1');
-                const normalizedBootTimeoutSeconds = Number.isFinite(bootTimeoutSeconds)
-                    ? Math.max(0, bootTimeoutSeconds)
-                    : 0;
-                const normalizedBootRetries = Number.isFinite(bootRetries)
-                    ? Math.max(0, Math.floor(bootRetries))
-                    : 0;
-                const bootTimeoutMs = normalizedBootTimeoutSeconds > 0
-                    ? normalizedBootTimeoutSeconds * 1000
-                    : undefined;
+                const bootTimeoutSeconds = Number(core.getInput('boot_timeout_seconds'));
+                const bootRetries = Number(core.getInput('boot_retries'));
+                const bootTimeoutMs = bootTimeoutSeconds > 0 ? bootRetries * 1000 : undefined;
                 core.info(`Waiting for device to finish booting.`);
-                const maxAttempts = normalizedBootRetries + 1;
+                const maxAttempts = bootRetries + 1;
                 for (let attempt = 1; attempt <= maxAttempts; attempt++) {
                     try {
                         yield (0, xcrun_1.simctl)('bootstatus', device.udid, { timeoutMs: bootTimeoutMs });
@@ -278,9 +270,9 @@ function xcrun(tail_1) {
     return __awaiter(this, arguments, void 0, function* (tail, options = {}) {
         const command = `xcrun ${tail}`;
         core.info(`$ ${command}`);
-        const execOptions = typeof options.timeoutMs === 'number'
-            ? { timeout: options.timeoutMs, encoding: 'utf8' }
-            : { encoding: 'utf8' };
+        const execOptions = options.timeoutMs === undefined
+            ? { encoding: 'utf8' }
+            : { timeout: options.timeoutMs, encoding: 'utf8' };
         const { stdout, stderr } = yield execAsync(command, execOptions);
         if (stderr) {
             core.warning(`Errors or warnings in the output of ${command}`);
