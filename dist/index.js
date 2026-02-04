@@ -120,7 +120,7 @@ function run() {
             if ((0, boolean_1.boolean)(core.getInput('wait_for_boot'))) {
                 const bootTimeoutSeconds = Number(core.getInput('boot_timeout_seconds'));
                 const bootRetries = Number(core.getInput('boot_retries'));
-                const bootTimeoutMs = bootTimeoutSeconds > 0 ? bootRetries * 1000 : undefined;
+                const bootTimeoutMs = bootTimeoutSeconds > 0 ? bootTimeoutSeconds * 1000 : undefined;
                 core.info(`Waiting for device to finish booting.`);
                 const maxAttempts = bootRetries + 1;
                 for (let attempt = 1; attempt <= maxAttempts; attempt++) {

@@ -89,7 +89,7 @@ async function run(): Promise<void> {
       const bootRetries = Number(core.getInput('boot_retries'))
 
       const bootTimeoutMs =
-        bootTimeoutSeconds > 0 ? bootRetries * 1000 : undefined
+        bootTimeoutSeconds > 0 ? bootTimeoutSeconds * 1000 : undefined
 
       core.info(`Waiting for device to finish booting.`)
       const maxAttempts = bootRetries + 1
