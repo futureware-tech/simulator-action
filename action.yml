@@ -34,13 +34,13 @@ inputs:
       Maximum number of seconds to wait for the Simulator to finish booting. Use
       0 to disable the timeout.
     required: false
-    default: '1200'
+    default: '360'
   boot_retries:
     description: >
       Number of times to retry booting when waiting for the Simulator to finish
       booting fails.
     required: false
-    default: '1'
+    default: '3'
   shutdown_after_job:
     description: >
       Whether the Simulator should be shut down after the job has finished. This
