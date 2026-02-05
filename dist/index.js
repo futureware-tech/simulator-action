@@ -273,19 +273,28 @@ function xcrun(tail_1) {
         const execOptions = options.timeoutMs === undefined
             ? { encoding: 'utf8' }
             : { timeout: options.timeoutMs, encoding: 'utf8' };
-        const { stdout, stderr } = yield execAsync(command, execOptions);
-        if (stderr) {
-            core.warning(`Errors or warnings in the output of ${command}`);
-            core.startGroup(`[stderr] ${command}`);
-            core.warning(stderr);
-            core.endGroup();
+        let res;
+        try {
+            res = yield execAsync(command, execOptions);
+            return res.stdout || '';
         }
-        if (core.isDebug()) {
-            core.startGroup(`[stdout] ${command}`);
-            core.debug(stdout);
-            core.endGroup();
+        catch (e) {
+            res = e;
+            throw e;
         }
-        return stdout;
+        finally {
+            if (res === null || res === void 0 ? void 0 : res.stderr) {
+                core.warning(`Errors or warnings in the output of ${command}`);
+                core.startGroup(`[stderr] ${command}`);
+                core.warning(res.stderr);
+                core.endGroup();
+            }
+            if ((res === null || res === void 0 ? void 0 : res.stdout) && core.isDebug()) {
+                core.startGroup(`[stdout] ${command}`);
+                core.debug(res.stdout);
+                core.endGroup();
+            }
+        }
     });
 }
 

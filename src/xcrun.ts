@@ -74,17 +74,24 @@ async function xcrun(tail: string, options: ExecOptions = {}): Promise<string> {
     options.timeoutMs === undefined
       ? {encoding: 'utf8'}
       : {timeout: options.timeoutMs, encoding: 'utf8'}
-  const {stdout, stderr} = await execAsync(command, execOptions)
-  if (stderr) {
-    core.warning(`Errors or warnings in the output of ${command}`)
-    core.startGroup(`[stderr] ${command}`)
-    core.warning(stderr)
-    core.endGroup()
+  let res: {stdout?: string; stderr?: string} | undefined
+  try {
+    res = await execAsync(command, execOptions)
+    return res.stdout || ''
+  } catch (e) {
+    res = e as {stdout?: string; stderr?: string}
+    throw e
+  } finally {
+    if (res?.stderr) {
+      core.warning(`Errors or warnings in the output of ${command}`)
+      core.startGroup(`[stderr] ${command}`)
+      core.warning(res.stderr)
+      core.endGroup()
+    }
+    if (res?.stdout && core.isDebug()) {
+      core.startGroup(`[stdout] ${command}`)
+      core.debug(res.stdout)
+      core.endGroup()
+    }
   }
-  if (core.isDebug()) {
-    core.startGroup(`[stdout] ${command}`)
-    core.debug(stdout)
-    core.endGroup()
-  }
-  return stdout
 }
