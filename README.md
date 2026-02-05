@@ -36,15 +36,17 @@ or if you really need OS version, leave it on the loose side (e.g.
 a device with Apple Developer account, because a Simulator UDID
 [can not be used there](https://developer.apple.com/forums/thread/693026).
 
-| Name                 | Sample values            | Description                                                                                                                        |
-| -------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `model`              | `iPhone 8`               | Model of the device you'd like to launch                                                                                           |
-| `os`                 | `iOS`, `tvOS`, `watchOS` | OS type of the device                                                                                                              |
-| `os_version`         | `>=14.0`                 | OS version specification in semver format                                                                                          |
-| `udid`               | `ABCD-EFGH`              | Specific UDID you'd like to launch                                                                                                 |
-| `erase_before_boot`  | `true`                   | Whether the data should be erased from device before boot. Starting from a clean state helps getting a stable environment for tests |
-| `wait_for_boot`      | `false`                  | Whether the action must wait for the Simulator to finish booting requested image                                                  |
-| `shutdown_after_job` | `true`                   | Whether to shutdown the launched Simulator after the workflow job has been finished                                                |
+| Name                   | Sample values            | Description                                                                                                                                                               |
+| ---------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`                | `iPhone 8`               | Model of the device you'd like to launch                                                                                                                                  |
+| `os`                   | `iOS`, `tvOS`, `watchOS` | OS type of the device                                                                                                                                                     |
+| `os_version`           | `>=14.0`                 | OS version specification in semver format                                                                                                                                 |
+| `udid`                 | `ABCD-EFGH`              | Specific UDID you'd like to launch                                                                                                                                        |
+| `erase_before_boot`    | `true`                   | Whether the data should be erased from device before boot. Starting from a clean state helps getting a stable environment for tests                                       |
+| `wait_for_boot`        | `false`                  | Whether the action must wait for the Simulator to finish booting requested image                                                                                          |
+| `boot_timeout_seconds` | `360`                    | Maximum number of seconds to wait for the Simulator to finish booting (0 disables the timeout)                                                                            |
+| `boot_retries`         | `2`                      | Number of times to retry booting when waiting for the Simulator to finish booting fails. Setting this to 2 will result in 3 attempts: one normal attempt and two retries. |
+| `shutdown_after_job`   | `true`                   | Whether to shutdown the launched Simulator after the workflow job has been finished                                                                                       |
 
 ## Outputs
 

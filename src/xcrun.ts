@@ -55,17 +55,28 @@ export async function getDevices(): Promise<DeviceInfo[]> {
   return allDevices
 }
 
-export async function simctl(action: string, udid: string): Promise<void> {
-  await xcrun(`simctl ${action} ${udid}`)
+type ExecOptions = {
+  timeoutMs?: number
 }
 
-async function xcrun(tail: string): Promise<string> {
+export async function simctl(
+  action: string,
+  udid: string,
+  options: ExecOptions = {}
+): Promise<void> {
+  await xcrun(`simctl ${action} ${udid}`, options)
+}
+
+async function xcrun(tail: string, options: ExecOptions = {}): Promise<string> {
   const command = `xcrun ${tail}`
   core.info(`$ ${command}`)
-
+  const execOptions =
+    options.timeoutMs === undefined
+      ? {encoding: 'utf8'}
+      : {timeout: options.timeoutMs, encoding: 'utf8'}
   let res: {stdout?: string; stderr?: string} | undefined
   try {
-    res = await execAsync(command)
+    res = await execAsync(command, execOptions)
     return res.stdout || ''
   } catch (e) {
     res = e as {stdout?: string; stderr?: string}
