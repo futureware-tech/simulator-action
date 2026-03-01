@@ -1,6 +1,4 @@
-<p align="center">
-  <a href="https://github.com/futureware-tech/simulator-action/actions"><img alt="simulator-action status" src="https://github.com/futureware-tech/simulator-action/workflows/build-test/badge.svg"></a>
-</p>
+[![build-test](https://github.com/futureware-tech/simulator-action/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/futureware-tech/simulator-action/actions/workflows/test.yml)
 
 # Launch iOS Simulator in GitHub Actions
 
@@ -12,8 +10,8 @@ self-hosted runners.
 
 ```yaml
 steps:
-  - uses: actions/checkout@v4
-  - uses: futureware-tech/simulator-action@v4
+  - uses: actions/checkout@v5
+  - uses: futureware-tech/simulator-action@v5
     with:
       model: 'iPhone 8'
   - run: flutter drive

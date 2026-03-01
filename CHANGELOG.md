@@ -1,3 +1,8 @@
+## v5
+
+- Fix flaky boot issues by adding a retry parameter (#563).
+- Print stdout/stderr even if the command fails (#562).
+
 ## v4
 
 - Add a `wait_for_boot` option (default false, preserving current behavior) to
