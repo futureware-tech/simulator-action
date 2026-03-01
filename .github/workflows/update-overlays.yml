@@ -52,7 +52,7 @@ jobs:
       - run: rm -rf tmp
 
       - name: "Check for changes and create/update PR"
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v8
         with:
           token: "${{ secrets.FASTLANE_UPDATE_GITHUB_TOKEN }}"
           commit-message: "[auto] update overlays"
