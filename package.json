@@ -27,7 +27,7 @@
   "author": "FutureWare LLC (https://futureware.dev)",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": ">=1.11.1",
+    "@actions/core": ">=3.0.0",
     "@types/semver": ">=7.7.1",
     "boolean": ">=3.2.0",
     "semver": ">=7.5.0"
