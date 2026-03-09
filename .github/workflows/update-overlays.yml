@@ -25,10 +25,10 @@ jobs:
       'ubuntu-latest'
       }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
       # Copy over shared workflow overlays.
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           repository: futureware-tech/template
           # Has to be under the repository directory, otherwise checkout fails.
@@ -38,7 +38,7 @@ jobs:
           cp -rf "tmp/template/." .
 
       # Copy over repository-specific custom overlay.
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           repository: futureware-tech/overlays
           path: tmp/overlays
