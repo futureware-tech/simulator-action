@@ -1,3 +1,9 @@
+## unreleased
+
+- Add a `settle_timeout_seconds` option (unset by default, preserving current
+  behavior) to optionally wait, after boot, for the Simulator's background
+  daemon-spawning CPU burst to subside before continuing.
+
 ## v5
 
 - Fix flaky boot issues by adding a retry parameter (#563).

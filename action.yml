@@ -41,6 +41,37 @@ inputs:
       booting fails.
     required: false
     default: '3'
+  settle_timeout_seconds:
+    description: >
+      Maximum number of seconds to wait, after boot, for the Simulator's
+      background CPU usage (daemons spawned by launchd_sim) to settle down
+      before continuing. Leave unset (default) to skip this check entirely,
+      preserving prior behavior. Set to 0 to skip it explicitly. If the
+      Simulator hasn't settled within this time, a warning is logged and the
+      action continues without failing the job.
+    required: false
+    default: ''
+  settle_check_interval_seconds:
+    description: >
+      Number of seconds between checks of the Simulator's background CPU
+      usage. Only relevant when settle_timeout_seconds is set to a positive
+      value.
+    required: false
+    default: '2'
+  settle_cpu_threshold_percent:
+    description: >
+      Aggregate %CPU (summed across all direct children of launchd_sim)
+      below which the Simulator is considered settled. Only relevant when
+      settle_timeout_seconds is set to a positive value.
+    required: false
+    default: '20'
+  settle_consecutive_samples:
+    description: >
+      Number of consecutive checks below settle_cpu_threshold_percent
+      required before the Simulator is considered settled. Only relevant
+      when settle_timeout_seconds is set to a positive value.
+    required: false
+    default: '3'
   shutdown_after_job:
     description: >
       Whether the Simulator should be shut down after the job has finished. This

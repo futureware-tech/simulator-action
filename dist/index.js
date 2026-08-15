@@ -53,6 +53,7 @@ const core = __importStar(__nccwpck_require__(7484));
 const boolean_1 = __nccwpck_require__(6919);
 const semver = __importStar(__nccwpck_require__(2088));
 const xcrun_1 = __nccwpck_require__(4502);
+const settle_1 = __nccwpck_require__(9441);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, _b, _c, _d, _e, _f, _g;
@@ -140,6 +141,17 @@ function run() {
                     }
                 }
             }
+            const settleTimeoutSeconds = Number(core.getInput('settle_timeout_seconds') || '0');
+            if (settleTimeoutSeconds > 0) {
+                core.info('Waiting for the Simulator to settle (background daemons to finish starting).');
+                yield (0, settle_1.waitForSettle)({
+                    udid: device.udid,
+                    cpuThresholdPercent: Number(core.getInput('settle_cpu_threshold_percent')),
+                    consecutiveSamples: Number(core.getInput('settle_consecutive_samples')),
+                    checkIntervalMs: Number(core.getInput('settle_check_interval_seconds')) * 1000,
+                    timeoutMs: settleTimeoutSeconds * 1000
+                });
+            }
             core.setOutput('udid', device.udid);
         }
         catch (error) {
@@ -175,6 +187,132 @@ if (core.getState('post')) {
 else {
     core.saveState('post', 'true');
     run();
+}
+
+
+/***/ }),
+
+/***/ 9441:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.computeSettleCpu = computeSettleCpu;
+exports.waitForSettle = waitForSettle;
+const core = __importStar(__nccwpck_require__(7484));
+const child_process_1 = __nccwpck_require__(5317);
+const util_1 = __nccwpck_require__(9023);
+const execAsync = (0, util_1.promisify)(child_process_1.exec);
+const PS_COMMAND = 'ps -Aww -o pid=,ppid=,pcpu=,command=';
+function parsePsOutput(psOutput) {
+    const samples = [];
+    for (const line of psOutput.split('\n')) {
+        const match = /^\s*(\d+)\s+(\d+)\s+([\d.]+)\s+(.*)$/.exec(line);
+        if (!match)
+            continue;
+        samples.push({
+            pid: Number(match[1]),
+            ppid: Number(match[2]),
+            pcpu: Number(match[3]),
+            command: match[4]
+        });
+    }
+    return samples;
+}
+/**
+ * Sums the %CPU of every direct child of the launchd_sim process belonging to `udid`. Returns
+ * undefined if no matching launchd_sim process is found (e.g. not booted yet).
+ */
+function computeSettleCpu(psOutput, udid) {
+    const samples = parsePsOutput(psOutput);
+    const udidLower = udid.toLowerCase();
+    const launchdSim = samples.find(s => s.command.includes('launchd_sim') &&
+        s.command.toLowerCase().includes(udidLower));
+    if (!launchdSim)
+        return undefined;
+    return samples
+        .filter(s => s.ppid === launchdSim.pid)
+        .reduce((sum, s) => sum + s.pcpu, 0);
+}
+/** Polls until CPU stays under threshold for N consecutive samples, or timeoutMs elapses. Never throws. */
+function waitForSettle(options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { udid, cpuThresholdPercent, consecutiveSamples, checkIntervalMs, timeoutMs } = options;
+        const startedAt = Date.now();
+        let consecutiveUnderThreshold = 0;
+        for (;;) {
+            let cpu;
+            try {
+                const { stdout } = yield execAsync(PS_COMMAND, { encoding: 'utf8' });
+                cpu = computeSettleCpu(stdout.toString(), udid);
+            }
+            catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                core.warning(`Failed to check Simulator settle status: ${message}`);
+            }
+            if (cpu === undefined) {
+                consecutiveUnderThreshold = 0;
+            }
+            else {
+                core.debug(`Simulator background CPU usage: ${cpu.toFixed(1)}%`);
+                consecutiveUnderThreshold =
+                    cpu < cpuThresholdPercent ? consecutiveUnderThreshold + 1 : 0;
+                if (consecutiveUnderThreshold >= consecutiveSamples) {
+                    core.info(`Simulator has settled (CPU below ${cpuThresholdPercent}% for ${consecutiveSamples} checks).`);
+                    return;
+                }
+            }
+            if (Date.now() - startedAt >= timeoutMs) {
+                core.warning(`Timed out after ${Math.round((Date.now() - startedAt) / 1000)}s waiting for the Simulator to ` +
+                    `settle below ${cpuThresholdPercent}% CPU. Continuing anyway.`);
+                return;
+            }
+            yield new Promise(resolve => setTimeout(resolve, checkIntervalMs));
+        }
+    });
 }
 
 
