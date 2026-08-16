@@ -3,6 +3,7 @@
 - Add a `settle_timeout_seconds` option (unset by default, preserving current
   behavior) to optionally wait, after boot, for the Simulator's background
   daemon-spawning CPU burst to subside before continuing.
+- Bump NodeJS to 24.
 
 ## v5
 
