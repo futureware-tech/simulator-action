@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import {boolean} from 'boolean'
 import * as semver from 'semver'
 import {deviceToString, getDevices, simctl} from './xcrun'
+import {waitForSettle} from './settle'
 
 async function run(): Promise<void> {
   try {
@@ -110,6 +111,25 @@ async function run(): Promise<void> {
           await simctl('boot', device.udid)
         }
       }
+    }
+
+    const settleTimeoutSeconds = Number(
+      core.getInput('settle_timeout_seconds') || '0'
+    )
+    if (settleTimeoutSeconds > 0) {
+      core.info(
+        'Waiting for the Simulator to settle (background daemons to finish starting).'
+      )
+      await waitForSettle({
+        udid: device.udid,
+        cpuThresholdPercent: Number(
+          core.getInput('settle_cpu_threshold_percent')
+        ),
+        consecutiveSamples: Number(core.getInput('settle_consecutive_samples')),
+        checkIntervalMs:
+          Number(core.getInput('settle_check_interval_seconds')) * 1000,
+        timeoutMs: settleTimeoutSeconds * 1000
+      })
     }
 
     core.setOutput('udid', device.udid)
