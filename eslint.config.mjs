@@ -2,8 +2,8 @@
 
 import {FlatCompat} from '@eslint/eslintrc'
 import js from '@eslint/js'
-import typescriptEslint from 'typescript-eslint'
 import globals from 'globals'
+import typescriptEslint from 'typescript-eslint'
 
 const compat = new FlatCompat()
 
@@ -12,23 +12,9 @@ export default typescriptEslint.config(
   ...compat.extends('plugin:jest/recommended', 'plugin:prettier/recommended'),
   ...typescriptEslint.configs.recommended,
   {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.jest
-      }
-    },
-    rules: {
-      'prettier/prettier': 'error'
-    }
+    languageOptions: {globals: {...globals.node, ...globals.jest}},
+    rules: {'prettier/prettier': 'error'}
   },
-  {
-    files: ['**/*.ts'],
-    rules: {
-      'no-unused-vars': 'off'
-    }
-  },
-  {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/lib/**']
-  }
+  {files: ['**/*.ts'], rules: {'no-unused-vars': 'off'}},
+  {ignores: ['**/dist/**', '**/node_modules/**', '**/lib/**']}
 )
