@@ -1,4 +1,4 @@
-## unreleased
+## v6
 
 - Add a `settle_timeout_seconds` option (unset by default, preserving current
   behavior) to optionally wait, after boot, for the Simulator's background

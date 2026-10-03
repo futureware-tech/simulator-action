@@ -55,3 +55,31 @@ a device with Apple Developer account, because a Simulator UDID
 | Name   | Sample values | Description                 |
 | ------ | ------------- | --------------------------- |
 | `udid` | `ABCD-EFGH`   | UDID of the launched device |
+
+## Releasing a New Version
+
+1. **Build and validate:**
+
+   Ensure all checks pass and the bundled [`dist/`](dist/) is up to date:
+
+   ```bash
+   $ npm run all
+   ```
+
+2. **Update Changelog:**
+
+   Move changes from `## unreleased` to the new version section (e.g. `## v7`)
+   in [`CHANGELOG.md`](CHANGELOG.md).
+
+3. **Commit and push:**
+
+   Commit all changes (including [`dist/`](dist/)) and merge into `main`.
+
+4. **Publish Release & Marketplace:**
+
+   - On GitHub, go to **Releases** → **Draft a new release**.
+   - Create a new tag (e.g. `v7`).
+   - Title the release and copy the release notes from
+     [`CHANGELOG.md`](CHANGELOG.md).
+   - Ensure **"Publish this Action to the GitHub Marketplace"** is checked.
+   - Click **Publish release**.
