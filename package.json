@@ -3,15 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "description": "Launch an iOS Simulator (and shut it down once the job completes)",
-  "main": "lib/main.js",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint .",
-    "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
+    "package": "ncc build src/main.ts --source-map --license licenses.txt",
+    "test": "vitest run",
+    "all": "npm run typecheck && npm run build && npm run format && npm run lint && npm run package && npm test",
     "print-devices": "node lib/print-devices.js"
   },
   "repository": {
@@ -27,36 +31,21 @@
   "author": "FutureWare LLC (https://futureware.dev)",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": ">=1.11.1",
-    "@types/semver": ">=7.7.1",
-    "boolean": ">=3.2.0",
-    "semver": ">=7.5.0"
+    "@actions/core": "^3.0.1",
+    "semver": "^7.8.5"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.1.0",
-    "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
-    "@github/local-action": "^7.0.1",
-    "@jest/globals": "^30.4.1",
-    "@rollup/plugin-commonjs": "^29.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^25.5.2",
-    "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "@vercel/ncc": ">=0.44.0",
-    "eslint": "^10.5.0",
+    "@types/node": "^26.6.4",
+    "@types/semver": "^7.8.0",
+    "@vercel/ncc": "^0.45.0",
+    "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jest": "^29.15.2",
     "eslint-plugin-prettier": "^5.5.6",
-    "jest": "^30.4.2",
-    "make-coverage-badge": "^1.2.0",
-    "prettier": "^3.8.4",
-    "rollup": "^4.62.2",
-    "ts-jest": "^29.4.11",
-    "ts-jest-resolver": "^2.0.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.61.1",
-    "globals": "^17.6.0"
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
   }
 }

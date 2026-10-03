@@ -1,4 +1,5 @@
-import {computeSettleCpu} from '../src/settle'
+import {expect, test} from 'vitest'
+import {computeSettleCpu} from '../src/settle.js'
 
 const UDID = 'AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE'
 

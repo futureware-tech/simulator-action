@@ -1,9 +1,10 @@
-## unreleased
+## v6
 
 - Add a `settle_timeout_seconds` option (unset by default, preserving current
   behavior) to optionally wait, after boot, for the Simulator's background
   daemon-spawning CPU burst to subside before continuing.
 - Bump NodeJS to 24.
+- Upgrade to native ES modules and modernized toolchain (TypeScript 6, @actions/core 3, Vitest 5, ESLint 10, @vercel/ncc 0.45, Nix flake inputs).
 
 ## v5
 

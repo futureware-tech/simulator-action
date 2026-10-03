@@ -12,9 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: |
-          npm install
+          npm ci
       - run: |
           npm run all
+      - name: Verify clean working tree
+        run: |
+          git diff --exit-code
   test: # make sure the action works on a clean machine without building
     runs-on: macOS-latest
     steps:
