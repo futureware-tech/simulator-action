@@ -1,8 +1,11 @@
 import * as core from '@actions/core'
-import {boolean} from 'boolean'
 import * as semver from 'semver'
-import {deviceToString, getDevices, simctl} from './xcrun'
-import {waitForSettle} from './settle'
+import {deviceToString, getDevices, simctl} from './xcrun.js'
+import {waitForSettle} from './settle.js'
+
+function parseBoolean(value: string | undefined): boolean {
+  return /^(true|t|yes|y|1)$/i.test(value?.trim() || '')
+}
 
 async function run(): Promise<void> {
   try {
@@ -74,18 +77,18 @@ async function run(): Promise<void> {
       await simctl('shutdown', device.udid)
     }
 
-    if (boolean(core.getInput('erase_before_boot'))) {
+    if (parseBoolean(core.getInput('erase_before_boot'))) {
       core.info(`Erasing device...`)
       await simctl('erase', device.udid)
     }
 
-    if (boolean(core.getInput('shutdown_after_job'))) {
+    if (parseBoolean(core.getInput('shutdown_after_job'))) {
       core.saveState('udid', device.udid)
     }
     core.info(`Booting device.`)
     await simctl('boot', device.udid)
 
-    if (boolean(core.getInput('wait_for_boot'))) {
+    if (parseBoolean(core.getInput('wait_for_boot'))) {
       const bootTimeoutSeconds = Number(core.getInput('boot_timeout_seconds'))
       const bootRetries = Number(core.getInput('boot_retries'))
 
@@ -159,8 +162,8 @@ async function cleanup(): Promise<void> {
 }
 
 if (core.getState('post')) {
-  cleanup()
+  await cleanup()
 } else {
   core.saveState('post', 'true')
-  run()
+  await run()
 }

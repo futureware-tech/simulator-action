@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
-import {exec} from 'child_process'
-import {promisify} from 'util'
+import {exec} from 'node:child_process'
+import {setTimeout} from 'node:timers/promises'
+import {promisify} from 'node:util'
 
 const execAsync = promisify(exec)
 const PS_COMMAND = 'ps -Aww -o pid=,ppid=,pcpu=,command='
@@ -97,6 +98,6 @@ export async function waitForSettle(
       return
     }
 
-    await new Promise(resolve => setTimeout(resolve, checkIntervalMs))
+    await setTimeout(checkIntervalMs)
   }
 }

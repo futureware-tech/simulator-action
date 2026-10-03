@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import {exec} from 'child_process'
-import {promisify} from 'util'
+import {exec} from 'node:child_process'
+import {promisify} from 'node:util'
 
 const execAsync = promisify(exec)
 const runtimePrefix = 'com.apple.CoreSimulator.SimRuntime.'
@@ -36,7 +36,7 @@ export async function getDevices(): Promise<DeviceInfo[]> {
 
   for (const [runtime, devices] of Object.entries(runtimes)) {
     if (runtime.startsWith(runtimePrefix)) {
-      const osAndVersion = runtime.substr(runtimePrefix.length).split('-')
+      const osAndVersion = runtime.substring(runtimePrefix.length).split('-')
       const os = osAndVersion.shift() || ''
       const os_version = osAndVersion.join('.')
       for (const device of devices) {
@@ -76,8 +76,9 @@ async function xcrun(tail: string, options: ExecOptions = {}): Promise<string> {
       : {timeout: options.timeoutMs, encoding: 'utf8'}
   let res: {stdout?: string | Buffer; stderr?: string | Buffer} | undefined
   try {
-    res = await execAsync(command, execOptions)
-    return (res.stdout || '').toString()
+    const execRes = await execAsync(command, execOptions)
+    res = execRes
+    return (execRes.stdout || '').toString()
   } catch (e) {
     res = e as {stdout?: string | Buffer; stderr?: string | Buffer}
     throw e
